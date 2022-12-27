@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        //Regist the privilege which can be used in blade template
         Gate::define('browse_import_posts', function (User $user) {
             return $user->hasPermission('browse_import_posts');
         });
