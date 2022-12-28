@@ -51,6 +51,7 @@ After you execute this command line. Your project will create the file below
       </ul>
     </li>
 </ul>
+
 ## Step 2
 Manually add code to the file below:
 <ul>
@@ -95,5 +96,14 @@ Add code snippet at the bottom:
     });
 ```
 ## Step 3
-Add your roles export/import privilege to your admin account for test, details below:
+Add your roles export/import privilege to your admin account, details below:
+![gui-screen-shot-01](/guides/assets/images/screen-shot-01.png)
+<br>
+<br>
+![gui-screen-shot-02](/guides/assets/images/screen-shot-02.png)
+<br>
+<br>
+![gui-screen-shot-03](/guides/assets/images/screen-shot-03.png)
+<br>
+<br>
 
