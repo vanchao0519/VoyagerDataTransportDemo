@@ -1,7 +1,7 @@
 # VoyagerDataTransportDemo
 A demonstrate how to use package <a href="https://github.com/vanchao0519/VoyagerDataTransport">VoyagerDataTransport</a>
 <br>
-This demo only list necessary files. You must create a laravel project before you watch this demo
+This demo only list necessary files. You must create a laravel project before you check this demo
 ## Step 1
 ```php
 php artisan voyager:data:transport posts
