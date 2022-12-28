@@ -6,7 +6,7 @@ This demo only list necessary files. You must create a laravel project before yo
 ```php
 php artisan voyager:data:transport posts
 ```
-After you execute this command line. Your project will create the file below
+After you execute this command line. Your project will create these files below
 <ul>
     <li>app
       <ul>
