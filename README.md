@@ -1,5 +1,5 @@
 # VoyagerDataTransportDemo
-A demostrate how to use package <a href="https://github.com/vanchao0519/VoyagerDataTransport">VoyagerDataTransport</a>
+A demonstrate how to use package <a href="https://github.com/vanchao0519/VoyagerDataTransport">VoyagerDataTransport</a>
 <br>
 This demo only list necessary files. You must create a laravel project before you watch this demo
 ## Step 1
@@ -97,6 +97,8 @@ Add code snippet at the bottom:
 ```
 ## Step 3
 Add your roles export/import privilege to your admin account, details below:
+<br>
+<br>
 ![gui-screen-shot-01](/guides/assets/images/screen-shot-01.png)
 <br>
 <br>
