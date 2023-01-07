@@ -23,7 +23,21 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::get('/import_posts', [App\VoyagerDataTransport\Http\Controllers\ImportPosts::class, 'index'])->name('voyager.browse_import_posts')->middleware('admin.user');
-    Route::get('/export_posts', [App\VoyagerDataTransport\Http\Controllers\ExportPosts::class, 'export'])->name('voyager.browse_export_posts')->middleware('admin.user');
-    Route::post('/import_posts/upload', [App\VoyagerDataTransport\Http\Controllers\ImportPosts::class, 'upload'])->name('voyager.import_posts.upload')->middleware('admin.user');
+    $configs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
+    foreach ($configs as $config) {
+        foreach ($config as $verb => $dataSets) {
+            $verb = strtolower($verb);
+            if (in_array($verb, ['get', 'post'])) {
+                foreach ($dataSets as $dataSet) {
+                    Route::$verb( $dataSet['url'], [
+                        $dataSet['controllerName'],
+                        $dataSet['actionName']
+                    ])
+                        ->name($dataSet['alias'])
+                        ->middleware('admin.user');
+                }
+            }
+        }
+    }
+
 });

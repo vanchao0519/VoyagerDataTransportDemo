@@ -23,6 +23,38 @@ After you execute this command line. Your project will create these files below
                     </ul>
                 </li>
             </ul>
+            <ul>
+                <li>config
+                    <ul>
+                        <li>permissions
+                            <ul>
+                                <li>tables
+                                <ul>
+                                    <li>posts.php</li>
+                                </ul>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>config.php</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>route
+                            <ul>
+                                <li>tables
+                                <ul>
+                                    <li>posts.php</li>
+                                </ul>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>config.php</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </li>
       </ul>
     </li>
@@ -56,6 +88,72 @@ After you execute this command line. Your project will create these files below
 Manually add code to the file below:
 <ul>
     <li>app
+      <ul>
+        <li>VoyagerDataTransport
+            <ul>
+                <li>config
+                    <ul>
+                        <li>permissions
+                            <ul>
+                                <li>config.php</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+      </ul>
+    </li>
+</ul>
+
+Add code snippet to the file
+```php
+$_configs = [];
+
+foreach (glob(__DIR__ . '/tables/*.php') as $file) {
+    $_config = require $file;
+    $_config = !empty($_config) ? $_config : [];
+    $_configs = array_merge($_configs, $_config) ;
+}
+
+return $_configs;
+```
+Manually add code to the file below:
+<ul>
+    <li>app
+      <ul>
+        <li>VoyagerDataTransport
+            <ul>
+                <li>config
+                    <ul>
+                        <li>route
+                            <ul>
+                                <li>config.php</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+      </ul>
+    </li>
+</ul>
+
+Add code snippet to the file
+```php
+$_configs = [];
+
+foreach (glob(__DIR__ . '/tables/*.php') as $file) {
+    $_config = require $file;
+    $_config = !empty($_config) ? $_config : [];
+    $_configs[] = $_config;
+}
+
+return $_configs;
+```
+Manually add code to the file below:
+<ul>
+    <li>app
         <ul>
             <li>Providers
                 <ul>
@@ -68,13 +166,17 @@ Manually add code to the file below:
 
 Add code snippet in boot function
 ```php
-    //Regist the privilege which can be used in blade template
-    Gate::define('browse_import_posts', function (App\Models\User $user) {
-        return $user->hasPermission('browse_import_posts');
+//Regist the privilege which can be used in blade template
+$configs = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
+
+$configs = !empty($configs) ? $configs : [];
+
+foreach ( $configs as $permission ) {
+    Gate::define($permission, function (User $user) use ($permission) {
+        return $user->hasPermission($permission);
     });
-    Gate::define('browse_export_posts', function (App\Models\User $user) {
-        return $user->hasPermission('browse_export_posts');
-    });
+}
+
 ```
 
 <ul>
@@ -89,11 +191,24 @@ Add code snippet in boot function
 
 Add code snippet at the bottom:
 ```php
-    Route::group(['prefix' => 'admin'], function () {
-        Route::get('/import_posts', [App\VoyagerDataTransport\Http\Controllers\ImportPosts::class, 'index'])->name('voyager.browse_import_posts')->middleware('admin.user');
-        Route::get('/export_posts', [App\VoyagerDataTransport\Http\Controllers\ExportPosts::class, 'export'])->name('voyager.browse_export_posts')->middleware('admin.user');
-        Route::post('/import_posts/upload', [App\VoyagerDataTransport\Http\Controllers\ImportPosts::class, 'upload'])->name('voyager.import_posts.upload')->middleware('admin.user');
-    });
+Route::group(['prefix' => 'admin'], function () {
+    $configs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
+    foreach ($configs as $config) {
+        foreach ($config as $verb => $dataSets) {
+            $verb = strtolower($verb);
+            if (in_array($verb, ['get', 'post'])) {
+                foreach ($dataSets as $dataSet) {
+                    Route::$verb( $dataSet['url'], [
+                        $dataSet['controllerName'],
+                        $dataSet['actionName']
+                    ])
+                        ->name($dataSet['alias'])
+                        ->middleware('admin.user');
+                }
+            }
+        }
+    }
+});
 ```
 ## Step 3
 Add your roles export/import privilege to your admin account, details below:

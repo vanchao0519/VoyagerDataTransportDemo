@@ -27,11 +27,15 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         //Regist the privilege which can be used in blade template
-        Gate::define('browse_import_posts', function (User $user) {
-            return $user->hasPermission('browse_import_posts');
-        });
-        Gate::define('browse_export_posts', function (User $user) {
-            return $user->hasPermission('browse_export_posts');
-        });
+        $configs = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
+
+        $configs = !empty($configs) ? $configs : [];
+
+        foreach ( $configs as $permission ) {
+            Gate::define($permission, function (User $user) use ($permission) {
+                return $user->hasPermission($permission);
+            });
+        }
+
     }
 }
