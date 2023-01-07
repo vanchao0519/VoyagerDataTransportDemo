@@ -34,9 +34,6 @@ After you execute this command line. Your project will create these files below
                                 </ul>
                                 </li>
                             </ul>
-                            <ul>
-                                <li>config.php</li>
-                            </ul>
                         </li>
                     </ul>
                     <ul>
@@ -47,9 +44,6 @@ After you execute this command line. Your project will create these files below
                                     <li>posts.php</li>
                                 </ul>
                                 </li>
-                            </ul>
-                            <ul>
-                                <li>config.php</li>
                             </ul>
                         </li>
                     </ul>
