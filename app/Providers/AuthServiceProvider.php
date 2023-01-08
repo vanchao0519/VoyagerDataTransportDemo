@@ -27,14 +27,23 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         //Regist the privilege which can be used in blade template
-        $configs = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
 
-        $configs = !empty($configs) ? $configs : [];
+        $permissions = false;
 
-        foreach ( $configs as $permission ) {
-            Gate::define($permission, function (User $user) use ($permission) {
-                return $user->hasPermission($permission);
-            });
+        if ( file_exists(dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php') ) {
+            $permissions = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
+        }
+
+        $hasPermission = !empty( $permissions ) && ( count($permissions) > 0 );
+
+        $permissions = $hasPermission ? $permissions : false;
+
+        if (false !== $permissions) {
+            foreach ( $permissions as $permission ) {
+                Gate::define($permission, function (User $user) use ($permission) {
+                    return $user->hasPermission($permission);
+                });
+            }
         }
 
     }

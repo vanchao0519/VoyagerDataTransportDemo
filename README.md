@@ -161,16 +161,24 @@ Manually add code to the file below:
 Add code snippet in boot function
 ```php
 //Regist the privilege which can be used in blade template
-$configs = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
 
-$configs = !empty($configs) ? $configs : [];
+$permissions = false;
 
-foreach ( $configs as $permission ) {
-    Gate::define($permission, function (User $user) use ($permission) {
-        return $user->hasPermission($permission);
-    });
+if ( file_exists(dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php') ) {
+    $permissions = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
 }
 
+$hasPermission = !empty( $permissions ) && ( count($permissions) > 0 );
+
+$permissions = $hasPermission ? $permissions : false;
+
+if (false !== $permissions) {
+    foreach ( $permissions as $permission ) {
+        Gate::define($permission, function (User $user) use ($permission) {
+            return $user->hasPermission($permission);
+        });
+    }
+}
 ```
 
 <ul>
@@ -186,22 +194,39 @@ foreach ( $configs as $permission ) {
 Add code snippet at the bottom:
 ```php
 Route::group(['prefix' => 'admin'], function () {
-    $configs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
-    foreach ($configs as $config) {
-        foreach ($config as $verb => $dataSets) {
-            $verb = strtolower($verb);
-            if (in_array($verb, ['get', 'post'])) {
-                foreach ($dataSets as $dataSet) {
-                    Route::$verb( $dataSet['url'], [
-                        $dataSet['controllerName'],
-                        $dataSet['actionName']
-                    ])
-                        ->name($dataSet['alias'])
-                        ->middleware('admin.user');
-                }
+
+    $routeConfigs = false;
+
+    if (file_exists(dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php")) {
+        $routeConfigs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
+    }
+
+    $hasRoute = !empty($routeConfigs) && ( count($routeConfigs) > 0 ) ;
+
+    $routeConfigs = $hasRoute ? $routeConfigs : false;
+
+    $registRoute = function ( string $verb, array $dataSets ): void {
+        $verb = strtolower($verb);
+        if (in_array($verb, ['get', 'post'])) {
+            foreach ($dataSets as $dataSet) {
+                Route::$verb( $dataSet['url'], [
+                    $dataSet['controllerName'],
+                    $dataSet['actionName']
+                ])
+                    ->name($dataSet['alias'])
+                    ->middleware('admin.user');
+            }
+        }
+    };
+
+    if (false !== $routeConfigs) {
+        foreach ($routeConfigs as $routeConfig) {
+            foreach ($routeConfig as $verb => $dataSets) {
+                $registRoute($verb, $dataSets);
             }
         }
     }
+
 });
 ```
 ## Step 3

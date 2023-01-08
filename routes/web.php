@@ -23,19 +23,35 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 Route::group(['prefix' => 'admin'], function () {
-    $configs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
-    foreach ($configs as $config) {
-        foreach ($config as $verb => $dataSets) {
-            $verb = strtolower($verb);
-            if (in_array($verb, ['get', 'post'])) {
-                foreach ($dataSets as $dataSet) {
-                    Route::$verb( $dataSet['url'], [
-                        $dataSet['controllerName'],
-                        $dataSet['actionName']
-                    ])
-                        ->name($dataSet['alias'])
-                        ->middleware('admin.user');
-                }
+
+    $routeConfigs = false;
+
+    if (file_exists(dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php")) {
+        $routeConfigs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
+    }
+
+    $hasRoute = !empty($routeConfigs) && ( count($routeConfigs) > 0 ) ;
+
+    $routeConfigs = $hasRoute ? $routeConfigs : false;
+
+    $registRoute = function ( string $verb, array $dataSets ): void {
+        $verb = strtolower($verb);
+        if (in_array($verb, ['get', 'post'])) {
+            foreach ($dataSets as $dataSet) {
+                Route::$verb( $dataSet['url'], [
+                    $dataSet['controllerName'],
+                    $dataSet['actionName']
+                ])
+                    ->name($dataSet['alias'])
+                    ->middleware('admin.user');
+            }
+        }
+    };
+
+    if (false !== $routeConfigs) {
+        foreach ($routeConfigs as $routeConfig) {
+            foreach ($routeConfig as $verb => $dataSets) {
+                $registRoute($verb, $dataSets);
             }
         }
     }
