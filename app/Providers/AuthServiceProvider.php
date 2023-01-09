@@ -30,8 +30,10 @@ class AuthServiceProvider extends ServiceProvider
 
         $permissions = false;
 
-        if ( file_exists(dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php') ) {
-            $permissions = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
+        $configFile = dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
+
+        if ( file_exists( $configFile ) ) {
+            $permissions = require $configFile;
         }
 
         $hasPermission = !empty( $permissions ) && ( count($permissions) > 0 );

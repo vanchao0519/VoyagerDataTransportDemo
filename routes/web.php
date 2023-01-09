@@ -25,16 +25,17 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'admin'], function () {
 
     $routeConfigs = false;
+    $configFile = dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
 
-    if (file_exists(dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php")) {
-        $routeConfigs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
+    if ( file_exists( $configFile ) ) {
+        $routeConfigs = require $configFile;
     }
 
     $hasRoute = !empty($routeConfigs) && ( count($routeConfigs) > 0 ) ;
 
     $routeConfigs = $hasRoute ? $routeConfigs : false;
 
-    $registRoute = function ( string $verb, array $dataSets ): void {
+    $regRoute = function ( string $verb, array $dataSets ): void {
         $verb = strtolower($verb);
         if (in_array($verb, ['get', 'post'])) {
             foreach ($dataSets as $dataSet) {
@@ -51,7 +52,7 @@ Route::group(['prefix' => 'admin'], function () {
     if (false !== $routeConfigs) {
         foreach ($routeConfigs as $routeConfig) {
             foreach ($routeConfig as $verb => $dataSets) {
-                $registRoute($verb, $dataSets);
+                $regRoute($verb, $dataSets);
             }
         }
     }

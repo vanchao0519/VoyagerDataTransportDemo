@@ -163,9 +163,10 @@ Add code snippet in boot function
 //Regist the privilege which can be used in blade template
 
 $permissions = false;
+$configFile = dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
 
-if ( file_exists(dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php') ) {
-    $permissions = require dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
+if ( file_exists( $configFile ) ) {
+    $permissions = require $configFile;
 }
 
 $hasPermission = !empty( $permissions ) && ( count($permissions) > 0 );
@@ -196,9 +197,10 @@ Add code snippet at the bottom:
 Route::group(['prefix' => 'admin'], function () {
 
     $routeConfigs = false;
+    $configFile = dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
 
-    if (file_exists(dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php")) {
-        $routeConfigs = require  dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
+    if (file_exists( $configFile )) {
+        $routeConfigs = require $configFile;
     }
 
     $hasRoute = !empty($routeConfigs) && ( count($routeConfigs) > 0 ) ;
