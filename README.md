@@ -34,6 +34,9 @@ After you execute this command line. Your project will create these files below
                                 </ul>
                                 </li>
                             </ul>
+                            <ul>
+                                <li>config.php</li>
+                            </ul>
                         </li>
                     </ul>
                     <ul>
@@ -44,6 +47,9 @@ After you execute this command line. Your project will create these files below
                                     <li>posts.php</li>
                                 </ul>
                                 </li>
+                            </ul>
+                            <ul>
+                                <li>config.php</li>
                             </ul>
                         </li>
                     </ul>
@@ -79,159 +85,6 @@ After you execute this command line. Your project will create these files below
 </ul>
 
 ## Step 2
-Manually add code to the file below:
-<ul>
-    <li>app
-      <ul>
-        <li>VoyagerDataTransport
-            <ul>
-                <li>config
-                    <ul>
-                        <li>permissions
-                            <ul>
-                                <li>config.php</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-      </ul>
-    </li>
-</ul>
-
-Add code snippet to the file
-```php
-$_configs = [];
-
-foreach (glob(__DIR__ . '/tables/*.php') as $file) {
-    $_config = require $file;
-    $_config = !empty($_config) ? $_config : [];
-    $_configs = array_merge($_configs, $_config) ;
-}
-
-return $_configs;
-```
-Manually add code to the file below:
-<ul>
-    <li>app
-      <ul>
-        <li>VoyagerDataTransport
-            <ul>
-                <li>config
-                    <ul>
-                        <li>route
-                            <ul>
-                                <li>config.php</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-      </ul>
-    </li>
-</ul>
-
-Add code snippet to the file
-```php
-$_configs = [];
-
-foreach (glob(__DIR__ . '/tables/*.php') as $file) {
-    $_config = require $file;
-    $_config = !empty($_config) ? $_config : [];
-    $_configs[] = $_config;
-}
-
-return $_configs;
-```
-Manually add code to the file below:
-<ul>
-    <li>app
-        <ul>
-            <li>Providers
-                <ul>
-                    <li>AuthServiceProvider.php</li>
-                </ul>
-            </li>
-        </ul>
-    </li>
-</ul>
-
-Add code snippet in boot function
-```php
-//Regist the privilege which can be used in blade template
-
-$permissions = false;
-$configFile = dirname(__DIR__, 1) . '/VoyagerDataTransport/config/permissions/config.php';
-
-if ( file_exists( $configFile ) ) {
-    $permissions = require $configFile;
-}
-
-$hasPermission = !empty( $permissions ) && ( count($permissions) > 0 );
-
-$permissions = $hasPermission ? $permissions : false;
-
-if (false !== $permissions) {
-    foreach ( $permissions as $permission ) {
-        Gate::define($permission, function (User $user) use ($permission) {
-            return $user->hasPermission($permission);
-        });
-    }
-}
-```
-
-<ul>
-    <li>routes
-        <ul>
-            <li>
-                web.php
-            </li>
-        </ul>
-    </li>
-</ul>
-
-Add code snippet at the bottom:
-```php
-Route::group(['prefix' => 'admin'], function () {
-
-    $routeConfigs = false;
-    $configFile = dirname(__DIR__, 1) . "/app/VoyagerDataTransport/config/route/config.php";
-
-    if (file_exists( $configFile )) {
-        $routeConfigs = require $configFile;
-    }
-
-    $hasRoute = !empty($routeConfigs) && ( count($routeConfigs) > 0 ) ;
-
-    $routeConfigs = $hasRoute ? $routeConfigs : false;
-
-    $registRoute = function ( string $verb, array $dataSets ): void {
-        $verb = strtolower($verb);
-        if (in_array($verb, ['get', 'post'])) {
-            foreach ($dataSets as $dataSet) {
-                Route::$verb( $dataSet['url'], [
-                    $dataSet['controllerName'],
-                    $dataSet['actionName']
-                ])
-                    ->name($dataSet['alias'])
-                    ->middleware('admin.user');
-            }
-        }
-    };
-
-    if (false !== $routeConfigs) {
-        foreach ($routeConfigs as $routeConfig) {
-            foreach ($routeConfig as $verb => $dataSets) {
-                $registRoute($verb, $dataSets);
-            }
-        }
-    }
-
-});
-```
-## Step 3
 Add your roles export/import privilege to your admin account, details below:
 <br>
 <br>
