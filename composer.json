@@ -12,7 +12,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "tcg/voyager": "^1.6",
-        "vanchao0519/voyager-data-transport": "^2.1"
+        "vanchao0519/voyager-data-transport": "^3.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
