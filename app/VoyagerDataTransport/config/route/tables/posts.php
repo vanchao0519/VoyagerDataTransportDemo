@@ -22,5 +22,11 @@ return [
             'actionName' => "upload",
             'alias' => "voyager.import_posts.upload",
         ],
+        [
+            'url' => "/export_posts/download",
+            'controllerName' => "App\VoyagerDataTransport\Http\Controllers\ExportPosts",
+            'actionName' => "download",
+            'alias' => "voyager.export_posts.download",
+        ],
     ],
 ];

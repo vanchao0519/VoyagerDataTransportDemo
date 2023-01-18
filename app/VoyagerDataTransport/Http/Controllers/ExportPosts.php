@@ -10,6 +10,16 @@ class ExportPosts extends Controller
 {
     use VoyagerExportData;
 
+    const XLSX_TYPE = 10;
+    const CSV_TYPE = 20;
+    const PDF_TYPE = 30;
+
+    public function export()
+    {
+        $this->authorize('browse_export_posts');
+        return view('vendor.voyager.posts.export-data', []);
+    }
+
     protected function setWriterType()
     {
         $this->writerType = 'xlsx';
