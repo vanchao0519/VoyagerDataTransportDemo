@@ -72,6 +72,7 @@ After you execute this command line. Your project will create these files below
                                     <ul>
                                         <li>browse.blade.php</li>
                                         <li>import-data.blade.php</li>
+                                        <li>export-data.blade.php</li>
                                     </ul>
                                 </li>
                             </ul>
