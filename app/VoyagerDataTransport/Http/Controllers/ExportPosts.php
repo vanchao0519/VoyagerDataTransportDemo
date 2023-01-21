@@ -20,11 +20,6 @@ class ExportPosts extends Controller
         return view('vendor.voyager.posts.export-data', []);
     }
 
-    protected function setWriterType()
-    {
-        $this->writerType = 'xlsx';
-    }
-
     protected function setSpreadSheet()
     {
 
