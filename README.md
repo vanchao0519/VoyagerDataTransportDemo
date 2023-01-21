@@ -86,7 +86,7 @@ After you execute this command line. Your project will create these files below
 </ul>
 
 ## Step2
-Manully add code to file below:
+Manully add code to the files below:
 <ul>
     <li>app
       <ul>
