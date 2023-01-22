@@ -110,6 +110,16 @@ Manully add code to the files below:
 
 Add code snippet to ImportPosts.php below:
 ```php
+
+const TITLE_COL = 0;
+const EXCERPT_COL = 1;
+const BODY_COL = 2;
+const IMAGE_COL = 3;
+const SLUG_COL = 4;
+const META_DESCRIPTION_COL = 5;
+const META_KEYWORDS_COL = 6;
+const STATUS_COL = 7;
+
 protected function importData(array $data)
 {
     try {
