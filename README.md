@@ -108,7 +108,7 @@ Manully add code to the files below:
     </li>
 </ul>
 
-Add code snippet to ImportPosts.php below:
+Modify code snippet to ImportPosts.php below:
 ```php
 
 const TITLE_COL = 0;
@@ -150,7 +150,7 @@ protected function importData(array $data)
 }
 ```
 
-Add code snippet to ExportPosts.php below:
+Modify code snippet to ExportPosts.php below:
 ```php
     protected function setSpreadSheet()
     {
